@@ -11,8 +11,6 @@
 (require 'solarized-theme)
 (load-theme 'solarized-dark t)
 ;; (load-theme 'solarized-light t)
-;; (require 'zenburn-theme)
-;; (load-theme 'zenburn t)
 
 ;; line number
 (global-linum-mode t)
@@ -60,6 +58,11 @@
 (require 'yasnippet)
 (yas-global-mode 1)
 
+;; company
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(global-set-key "\t" 'company-complete-common)
+
 ;; Packages for Specific Filetypes
 ;; ========================================
 
@@ -80,7 +83,7 @@
 (require 'web-beautify)
 
 
-;; Shortcuts
+;; Useful Snippets
 ;; ========================================
 
 ;; comment current line if nothing is selected
@@ -141,8 +144,8 @@
 
 ;; frame position
 (add-to-list 'default-frame-alist '(left . 400))
-(add-to-list 'default-frame-alist '(height . 49))
-(add-to-list 'default-frame-alist '(width . 98))
+(add-to-list 'default-frame-alist '(height . 50))
+(add-to-list 'default-frame-alist '(width . 100))
 
 ;; turn on auto-fill
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -165,4 +168,4 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (yasnippet zenburn-theme helm-ag helm-projectile popwin whitespace-cleanup-mode web-mode web-beautify uuidgen solarized-theme smex smartparens projectile markdown-mode js2-mode helm auctex))))
+    (company yasnippet helm-ag helm-projectile popwin whitespace-cleanup-mode web-mode web-beautify uuidgen solarized-theme smex smartparens projectile markdown-mode js2-mode helm auctex))))
