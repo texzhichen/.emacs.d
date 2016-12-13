@@ -5,7 +5,7 @@
 (package-initialize)
 (require 'package)
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")))
+			 ("melpa" . "https://melpa.org/packages/")))
 
 ;; color theme
 (require 'solarized-theme)
@@ -17,12 +17,15 @@
 
 ;; helm
 (require 'helm-config)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-(global-set-key "\C-x\ \C-b" 'helm-buffers-list)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 (helm-mode 1)
 (require 'helm-projectile)
 (helm-projectile-on)
 (require 'helm-ag)
+(global-set-key (kbd "C-c a t") 'helm-ag-this-file)
+(global-set-key (kbd "C-c a a") 'helm-ag)
+(global-set-key (kbd "C-c a i") 'helm-imenu)
 
 ;; smex
 (require 'smex)
@@ -46,7 +49,7 @@
 (require 'recentf)
 (recentf-mode 1)
 (setq recentf-max-menu-items 50)
-(global-set-key "\C-x\ \C-r" 'helm-recentf)
+(global-set-key (kbd "C-x C-r") 'helm-recentf)
 
 ;; projectile
 (require 'projectile)
@@ -75,6 +78,9 @@
 (require 'all-the-icons)
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 
+;; window numbering
+(require 'window-numbering)
+(window-numbering-mode)
 
 ;; Packages for Specific Filetypes
 ;; ========================================
