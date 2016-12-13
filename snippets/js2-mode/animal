@@ -1,5 +1,5 @@
-# -*- mode: snippet -*-
-# name: js2-animal
+# -*- mode: js2-mode -*-
+# name: animal
 # key: animal
 # --
 var animals = [
