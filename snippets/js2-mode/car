@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: car
+# key: car
+# --
+const cars = [
+  {brand: 'honda', model: 'Accord', type: 'full-size'},
+  {brand: 'toyata', model: 'Camry', type: 'full-size'},
+  {brand: 'chevy', model: 'Malibu', type: 'full-size'}
+]
