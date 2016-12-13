@@ -19,7 +19,6 @@
 (require 'helm-config)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 (global-set-key "\C-x\ \C-b" 'helm-buffers-list)
-(global-set-key "\C-x\ b" 'helm-mini)
 (helm-mode 1)
 (require 'helm-projectile)
 (helm-projectile-on)
@@ -30,6 +29,10 @@
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+
+;; magit
+(require 'magit)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 ;; smartparens
 (require 'smartparens-config)
@@ -46,13 +49,10 @@
 (global-set-key "\C-x\ \C-r" 'helm-recentf)
 
 ;; projectile
+(require 'projectile)
 (projectile-mode)
 (setq projectile-completion-system 'helm)
 (setq projectile-enable-caching t)
-
-;; popwin
-(require 'popwin)
-(popwin-mode 1)
 
 ;; yasnippet
 (require 'yasnippet)
@@ -62,6 +62,19 @@
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 (global-set-key "\t" 'company-complete-common)
+
+;; popwin
+(require 'popwin)
+(popwin-mode 1)
+
+;; powerline
+(require 'powerline)
+(powerline-default-theme)
+
+;; all-the-icons
+(require 'all-the-icons)
+(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+
 
 ;; Packages for Specific Filetypes
 ;; ========================================
@@ -112,6 +125,9 @@
 
 ;; Settings
 ;; ========================================
+
+;; highlight current line
+(global-hl-line-mode t)
 
 ;; disable backup files
 (setq make-backup-files nil)
@@ -168,4 +184,4 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (company yasnippet helm-ag helm-projectile popwin whitespace-cleanup-mode web-mode web-beautify uuidgen solarized-theme smex smartparens projectile markdown-mode js2-mode helm auctex))))
+    (magit all-the-icons all-the-icons-dired powerline company yasnippet helm-ag helm-projectile popwin whitespace-cleanup-mode web-mode web-beautify uuidgen solarized-theme smex smartparens projectile markdown-mode js2-mode helm auctex))))
