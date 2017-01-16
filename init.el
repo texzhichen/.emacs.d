@@ -16,8 +16,8 @@
 (global-set-key (kbd "s-c") 'kill-ring-save)
 (global-set-key (kbd "s-a") 'mark-whole-buffer)
 (global-set-key (kbd "s-l") 'goto-line)
-(global-set-key (kbd "s-z") 'undo)
 (require 'redo+)
+(global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-Z") 'redo)
 
 ;; color theme
