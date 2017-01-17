@@ -10,7 +10,6 @@
 ;; emacs-mac
 (setq mac-option-modifier 'meta)
 (setq mac-command-modifier 'super)
-
 (global-set-key (kbd "s-s") 'save-buffer)
 (global-set-key (kbd "s-v") 'yank)
 (global-set-key (kbd "s-c") 'kill-ring-save)
@@ -25,24 +24,35 @@
 (load-theme 'solarized-dark t)
 ;; (load-theme 'solarized-light t)
 
-;; org-mode
-(setq org-image-actual-width '(500))
-(setq org-startup-truncated nil)
-
 ;; line number
 (global-linum-mode t)
 
 ;; helm
 (require 'helm-config)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 (helm-mode 1)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-b") 'helm-mini)
+
+(global-set-key (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+(global-set-key (kbd "C-c h o") 'helm-occur)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+
 (require 'helm-projectile)
 (helm-projectile-on)
+
 (require 'helm-ag)
 (global-set-key (kbd "C-c a t") 'helm-ag-this-file)
 (global-set-key (kbd "C-c a a") 'helm-ag)
-(global-set-key (kbd "C-c a i") 'helm-imenu)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(helm-follow-mode-persistent t)
+ '(package-selected-packages
+   (quote
+    (ace-window avy org-download redo+ reveal-in-osx-finder smart-tabs-mode magit all-the-icons all-the-icons-dired powerline company yasnippet helm-ag helm-projectile popwin whitespace-cleanup-mode web-mode web-beautify uuidgen solarized-theme smex smartparens projectile markdown-mode js2-mode helm auctex))))
 
 ;; smex
 (require 'smex)
@@ -94,14 +104,17 @@
 (require 'all-the-icons)
 (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
 
-;; window numbering
-(require 'window-numbering)
-(window-numbering-mode)
-
 ;; reveal in finder
 (require 'reveal-in-osx-finder)
 (global-set-key (kbd "C-c z") 'reveal-in-osx-finder)
 
+;; avy
+(require 'avy)
+(global-set-key (kbd "s-.") 'avy-goto-word-or-subword-1)
+
+;; ace-window
+(require 'ace-window)
+(global-set-key (kbd "s-w") 'ace-window)
 
 ;; Packages for Specific Filetypes
 ;; ========================================
@@ -126,6 +139,9 @@
 ;; web-mode
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
+
+
 (defun web-mode-tab-setting()
   (setq indent-tabs-mode nil)
   (setq tab-stop-list (number-sequence 2 200 2))
@@ -133,6 +149,30 @@
   (setq indent-line-function 'insert-tab))
 
 (add-hook 'web-mode-hook 'web-mode-tab-setting)
+
+;; org-mode
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
+
+(setq org-image-actual-width '(500))
+(setq org-startup-truncated nil)
+(setq org-src-fontify-natively t)
+
+;; change the way how org-mode opens a link
+;; http://stackoverflow.com/questions/3973896/emacs-org-mode-file-viewer-associations
+(add-hook 'org-mode-hook
+      '(lambda ()
+             (setq org-file-apps
+                   (append '(
+                             ("\\.png\\'" . default)
+			     ("\\.pdf\\'" . default)
+			     ("\\.tiff\\'" . default)
+			     ("\\.jpg\\'" . default)
+                             ) org-file-apps ))))
+
+(require 'org-download)
+(setq-default org-download-image-dir "./images")
 
 ;; outline-minor-mode key map
  (define-prefix-command 'cm-map nil "Outline-")
@@ -257,11 +297,4 @@
  ;; If there is more than one, they won't work right.
  )
 (put 'dired-find-alternate-file 'disabled nil)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   (quote
-    (redo+ reveal-in-osx-finder window-numbering smart-tabs-mode magit all-the-icons all-the-icons-dired powerline company yasnippet helm-ag helm-projectile popwin whitespace-cleanup-mode web-mode web-beautify uuidgen solarized-theme smex smartparens projectile markdown-mode js2-mode helm auctex))))
+
