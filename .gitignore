@@ -1,7 +1,18 @@
-/*
+# macOS
+.DS_Store
 
-!.gitignore
+# Emacs
+*~
+.projectile
+.tern-project
+.tern-port
 
-!snippets/
-!init.el
-!personal/
+auto-save-list/
+elpa/
+eshell
+projectile*
+recentf*
+smex*
+url/
+emojis/
+games/

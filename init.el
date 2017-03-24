@@ -7,6 +7,17 @@
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
 			 ("melpa" . "https://melpa.org/packages/")))
 
+;; custom variables
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(helm-follow-mode-persistent t)
+ '(package-selected-packages
+   (quote
+    (smex dired-subtree indent-guide company-tern tern ace-window avy org-download redo+ reveal-in-osx-finder smart-tabs-mode magit all-the-icons all-the-icons-dired company yasnippet popwin whitespace-cleanup-mode web-mode web-beautify solarized-theme smartparens projectile markdown-mode js2-mode auctex))))
+
 ;; emacs-mac
 (setq mac-option-modifier 'meta)
 (setq mac-command-modifier 'super)
@@ -18,47 +29,43 @@
 (require 'redo+)
 (global-set-key (kbd "s-z") 'undo)
 (global-set-key (kbd "s-Z") 'redo)
+(global-set-key (kbd "RET") 'electric-newline-and-maybe-indent)
 
 ;; color theme
 (require 'solarized-theme)
 (load-theme 'solarized-dark t)
 ;; (load-theme 'solarized-light t)
 
+;; show matching parentheses
+(show-paren-mode t)
+
 ;; line number
 (global-linum-mode t)
 
-;; helm
-(require 'helm-config)
-(helm-mode 1)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-x C-b") 'helm-mini)
+;; ivy
+(ivy-mode 1)
+(setq ivy-use-virtual-buffers t)
+(setq enable-recursive-minibuffers t)
+(global-set-key (kbd "C-x C-r") 'ivy-resume)
+(global-set-key (kbd "<f6>") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-x C-b") 'ivy-switch-buffer)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+;; (global-set-key (kbd "C-c f") 'counsel-git)
+;; (global-set-key (kbd "C-c g") 'counsel-git-grep)
+(global-set-key (kbd "C-c k") 'counsel-ag)
+;; (global-set-key (kbd "C-x l") 'counsel-locate)
+(define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+(global-set-key (kbd "C-'") 'ivy-avy)
+(global-set-key (kbd "C-c s") 'swiper)
 
-(global-set-key (kbd "C-c h") 'helm-command-prefix)
-(global-unset-key (kbd "C-x c"))
-(global-set-key (kbd "C-c h o") 'helm-occur)
-(global-set-key (kbd "M-y") 'helm-show-kill-ring)
-
-(require 'helm-projectile)
-(helm-projectile-on)
-
-(require 'helm-ag)
-(global-set-key (kbd "C-c a t") 'helm-ag-this-file)
-(global-set-key (kbd "C-c a a") 'helm-ag)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(helm-follow-mode-persistent t)
- '(package-selected-packages
-   (quote
-    (ace-window avy org-download redo+ reveal-in-osx-finder smart-tabs-mode magit all-the-icons all-the-icons-dired powerline company yasnippet helm-ag helm-projectile popwin whitespace-cleanup-mode web-mode web-beautify uuidgen solarized-theme smex smartparens projectile markdown-mode js2-mode helm auctex))))
-
-;; smex
-(require 'smex)
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+(require 'counsel-projectile)
+(counsel-projectile-on)
 
 ;; magit
 (require 'magit)
@@ -71,22 +78,27 @@
 ;; whitespace cleanup on save
 (require 'whitespace-cleanup-mode)
 (global-whitespace-cleanup-mode t)
+(global-set-key (kbd "C-c w") 'whitespace-cleanup)
 
 ;; recentf
 (require 'recentf)
 (recentf-mode 1)
 (setq recentf-max-menu-items 50)
-(global-set-key (kbd "C-x C-r") 'helm-recentf)
 
 ;; projectile
 (require 'projectile)
 (projectile-mode)
-(setq projectile-completion-system 'helm)
+(setq projectile-completion-system 'ivy)
 (setq projectile-enable-caching nil)
+
+(global-set-key (kbd "C-c f") 'projectile-find-file)
+(global-set-key (kbd "C-c g") 'projectile-ag)
+(global-set-key (kbd "C-c b") 'projectile-switch-to-buffer)
 
 ;; yasnippet
 (require 'yasnippet)
 (yas-global-mode 1)
+(global-set-key (kbd "C-c i") 'yas-expand)
 
 ;; company
 (require 'company)
@@ -95,10 +107,6 @@
 ;; popwin
 (require 'popwin)
 (popwin-mode 1)
-
-;; powerline
-(require 'powerline)
-(powerline-default-theme)
 
 ;; all-the-icons
 (require 'all-the-icons)
@@ -110,11 +118,28 @@
 
 ;; avy
 (require 'avy)
-(global-set-key (kbd "s-.") 'avy-goto-word-or-subword-1)
+(global-set-key (kbd "s->") 'avy-goto-word-or-subword-1)
+(global-set-key (kbd "s-.") 'avy-goto-char)
 
 ;; ace-window
 (require 'ace-window)
-(global-set-key (kbd "s-w") 'ace-window)
+(global-set-key (kbd "M-p") 'ace-window)
+
+;; indent-guide
+(require 'indent-guide)
+(indent-guide-global-mode)
+
+;; dired-subtree
+(define-key dired-mode-map "i" 'dired-subtree-insert)
+(define-key dired-mode-map ";" 'dired-subtree-remove)
+
+;; rebinds `^´ to use the same buffer
+(add-hook 'dired-mode-hook
+ (lambda ()
+  (define-key dired-mode-map (kbd "^")
+    (lambda () (interactive) (find-alternate-file "..")))
+  ; was dired-up-directory
+ ))
 
 ;; Packages for Specific Filetypes
 ;; ========================================
@@ -128,19 +153,34 @@
 (setq TeX-parse-self t)
 (add-hook 'LaTeX-mode-hook #'outline-minor-mode)
 
-;; js2
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-(setq js2-strict-missing-semi-warning nil)
+;; ========== <Web Development> ========== ;;
+
+;; scss-mode
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+(add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
 
 ;; web-beauify
 (require 'web-beautify)
+
+;; js2
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.json\\'" . js2-mode))
+(add-hook 'js2-mode-hook (lambda () (setq js2-basic-offset 2)))
+;; (setq js2-strict-missing-semi-warning nil)
+
+;; tern
+(require 'tern)
+(add-hook 'web-mode-hook (lambda () (tern-mode t)))
+
+(require 'company-tern)
+(add-to-list 'company-backends 'company-tern)
 
 ;; web-mode
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . web-mode))
-
+(setq web-mode-enable-auto-indentation nil)
+(setq web-mode-enable-auto-closing nil)
 
 (defun web-mode-tab-setting()
   (setq indent-tabs-mode nil)
@@ -149,6 +189,28 @@
   (setq indent-line-function 'insert-tab))
 
 (add-hook 'web-mode-hook 'web-mode-tab-setting)
+
+;; This is to force .js files using .jsx settings for ReactJS
+(add-hook 'web-mode-hook
+      (lambda ()
+        ;; short circuit js mode and just do everything in jsx-mode
+        (if (equal web-mode-content-type "javascript")
+            (web-mode-set-content-type "jsx")
+          (message "now set to: %s" web-mode-content-type))))
+
+;; add js2-minor-mode to web-mode only for .js files, e.g., not .html
+(add-hook 'find-file-hook 'my-project-hook)
+(defun my-project-hook ()
+  (when (string= (file-name-extension buffer-file-name) "js")
+    (web-mode)
+    (js2-minor-mode)))
+
+(global-set-key (kbd "C-j") 
+		(lambda () (interactive) (electric-newline-and-maybe-indent)
+		  (indent-relative)))
+(global-set-key (kbd "C-c j") 'indent-relative)
+
+;; ========== </Web Development> ========== ;;
 
 ;; org-mode
 (define-key global-map "\C-cl" 'org-store-link)
@@ -202,19 +264,46 @@
 ;; Useful Snippets
 ;; ========================================
 
-'' backtab
-(global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
-(defun un-indent-by-removing-4-spaces ()
-  "remove 4 spaces from beginning of of line"
-  (interactive)
-  (save-excursion
-    (save-match-data
-      (beginning-of-line)
-      ;; get rid of tabs at beginning of line
-      (when (looking-at "^\\s-+")
-        (untabify (match-beginning 0) (match-end 0)))
-      (when (looking-at "^    ")
-        (replace-match "")))))
+;; tab and backtab region
+(defun indent-region(numSpaces)
+  (progn 
+    ; default to start and end of current line
+    (setq regionStart (line-beginning-position))
+    (setq regionEnd (line-end-position))
+
+    ; if there's a selection, use that instead of the current line
+    (when (use-region-p)
+      (setq regionStart (region-beginning))
+      (setq regionEnd (region-end))
+    )
+
+    (save-excursion ; restore the position afterwards            
+      (goto-char regionStart) ; go to the start of region
+      (setq start (line-beginning-position)) ; save the start of the line
+      (goto-char regionEnd) ; go to the end of region
+      (setq end (line-end-position)) ; save the end of the line
+
+      (indent-rigidly start end numSpaces) ; indent between start and end
+      (setq deactivate-mark nil) ; restore the selected region
+    )
+  )
+)
+
+(defun untab-region (N)
+  (interactive "p")
+  (indent-region -2)
+)
+
+(defun tab-region (N)
+  (interactive "p")
+  (if (use-region-p)
+    (indent-region 2) ; region was selected, call indent-region
+    (insert "  ") ; else insert four spaces as expected
+  )
+)
+
+(global-set-key (kbd "<S-tab>") 'untab-region)
+(global-set-key (kbd "<tab>") 'tab-region)
 
 ;; comment current line if nothing is selected
 (defun comment-eclipse ()
@@ -268,8 +357,61 @@
 (setq frame-title-format '((:eval (if (buffer-file-name)
 (abbreviate-file-name (buffer-file-name)) "%b"))))
 
-(set-frame-font "MonacoB2 12")
+(set-frame-font "MonacoB2 13")
 (set-fontset-font "fontset-default" 'han '("STHeiti"))
+
+;; mode line
+(setq-default mode-line-format
+  (list
+    ;; the buffer name; the file name as a tool tip
+    '(:eval (propertize "%b " 'face 'font-lock-keyword-face
+        'help-echo (buffer-file-name)))
+
+    ;; line and column
+    "(" ;; '%02' to set to 2 chars at least; prevents flickering
+      (propertize "%02l" 'face 'font-lock-type-face) ","
+      (propertize "%02c" 'face 'font-lock-type-face) 
+    ") "
+
+    ;; relative position, size of file
+    "["
+    (propertize "%p" 'face 'font-lock-constant-face) ;; % above top
+    "/"
+    (propertize "%I" 'face 'font-lock-constant-face) ;; size
+    "] "
+
+    ;; the current major mode for the buffer.
+    "["
+
+    '(:eval (propertize "%m" 'face 'font-lock-string-face
+              'help-echo buffer-file-coding-system))
+    "] "
+
+
+    "[" ;; insert vs overwrite mode, input-method in a tooltip
+    '(:eval (propertize (if overwrite-mode "Ovr" "Ins")
+              'face 'font-lock-preprocessor-face
+              'help-echo (concat "Buffer is in "
+                           (if overwrite-mode "overwrite" "insert") " mode")))
+
+    ;; was this buffer modified since the last save?
+    '(:eval (when (buffer-modified-p)
+              (concat ","  (propertize "Mod"
+                             'face 'font-lock-warning-face
+                             'help-echo "Buffer has been modified"))))
+
+    ;; is this buffer read-only?
+    '(:eval (when buffer-read-only
+              (concat ","  (propertize "RO"
+                             'face 'font-lock-type-face
+                             'help-echo "Buffer is read-only"))))  
+    "] "
+
+    ;; " --"
+    ;; i don't want to see minor-modes; but if you want, uncomment this:
+    ;; minor-mode-alist  ;; list of minor modes
+    ;; "%-" ;; fill with '-'
+    ))
 
 ;; scroll three line at a time (less "jumpy" than defaults)
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))) ;; three line at a time
