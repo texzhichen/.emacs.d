@@ -16,7 +16,7 @@
  '(helm-follow-mode-persistent t)
  '(package-selected-packages
    (quote
-    (smex dired-subtree indent-guide company-tern tern ace-window avy org-download redo+ reveal-in-osx-finder smart-tabs-mode magit all-the-icons all-the-icons-dired company yasnippet popwin whitespace-cleanup-mode web-mode web-beautify solarized-theme smartparens projectile markdown-mode js2-mode auctex))))
+    (tide smex dired-subtree indent-guide company-tern tern ace-window avy org-download redo+ reveal-in-osx-finder smart-tabs-mode magit company yasnippet popwin whitespace-cleanup-mode web-mode web-beautify solarized-theme smartparens projectile markdown-mode js2-mode auctex))))
 
 ;; emacs-mac
 (setq mac-option-modifier 'meta)
@@ -108,10 +108,6 @@
 (require 'popwin)
 (popwin-mode 1)
 
-;; all-the-icons
-(require 'all-the-icons)
-(add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
-
 ;; reveal in finder
 (require 'reveal-in-osx-finder)
 (global-set-key (kbd "C-c z") 'reveal-in-osx-finder)
@@ -159,6 +155,32 @@
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 (add-to-list 'auto-mode-alist '("\\.sass\\'" . scss-mode))
 
+;; typescript
+(setq typescript-auto-indent-flag nil)
+
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  ;; company is an optional dependency. You have to
+  ;; install it separately via package-install
+  ;; `M-x package-install [ret] company`
+  (company-mode +1))
+
+(setq tide-format-options '(:tabSize 2 :indentSize 2))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+(add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+
 ;; web-beauify
 (require 'web-beautify)
 
@@ -171,6 +193,8 @@
 ;; tern
 (require 'tern)
 (add-hook 'web-mode-hook (lambda () (tern-mode t)))
+
+(setq tern-command (append tern-command '("--no-port-file")))
 
 (require 'company-tern)
 (add-to-list 'company-backends 'company-tern)
@@ -357,7 +381,7 @@
 (setq frame-title-format '((:eval (if (buffer-file-name)
 (abbreviate-file-name (buffer-file-name)) "%b"))))
 
-(set-frame-font "MonacoB2 13")
+(set-frame-font "MonacoB2 12")
 (set-fontset-font "fontset-default" 'han '("STHeiti"))
 
 ;; mode line
